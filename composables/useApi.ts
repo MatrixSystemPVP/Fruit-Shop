@@ -50,7 +50,7 @@ export const useApi = () => {
 
 // General
 
-interface Meta {
+export interface Meta {
   count: number
   start: number
   limit: number
@@ -60,12 +60,12 @@ interface Meta {
 
 // Customer(s)
 
-interface CustomersQuery {
+export interface CustomersQuery {
   start?: number
   limit?: number
 }
 
-interface Customers {
+export interface Customers {
   meta: Meta
   customers: {
     id: number
@@ -74,14 +74,14 @@ interface Customers {
   }[]
 }
 
-interface Customer {
+export interface Customer {
   firstname: string
   lastname: string
   orders_url?: string
   customer_url?: string
 }
 
-interface CustomerOrders {
+export interface CustomerOrders {
   meta: Meta
   orders: {
     id: number
@@ -90,7 +90,7 @@ interface CustomerOrders {
   }[]
 }
 
-interface CreateCustomerOrder {
+export interface CreateCustomerOrder {
   items: {
     product: number
     quantity: number
@@ -99,7 +99,7 @@ interface CreateCustomerOrder {
 
 // Product(s)
 
-interface ProductsQuery {
+export interface ProductsQuery {
   start?: number
   limit?: number
   name?: string
@@ -118,12 +118,12 @@ export interface Products {
   }[]
 }
 
-interface CreateProduct {
+export interface CreateProduct {
   name: string
   price: number
 }
 
-interface Product {
+export interface Product {
   id: number
   name: string
   price: number
@@ -131,31 +131,31 @@ interface Product {
   modified_at: string
 }
 
-interface UpdateProduct {
+export interface UpdateProduct {
   name: string
   price: number
 }
 
-interface UpdateProductProperties {
+export interface UpdateProductProperties {
   name?: string
   price?: number
 }
 
-interface UploadProductImage {
+export interface UploadProductImage {
   file: string // TODO: Check if the Type is correct
 }
 
 // Order(s)
 
-type OrderState = 'CREATED' | 'ORDERED' | 'DELIVERED' | 'CANCELED'
+export type OrderState = 'CREATED' | 'ORDERED' | 'DELIVERED' | 'CANCELED'
 
-interface OrdersQuery {
+export interface OrdersQuery {
   start?: number
   limit?: number
   state?: OrderState
 }
 
-interface Orders {
+export interface Orders {
   meta: Meta
   orders: {
     id: number
@@ -169,7 +169,7 @@ interface Orders {
   }[]
 }
 
-interface Order {
+export interface Order {
   id: number
   state: OrderState
   customer: number
@@ -180,7 +180,7 @@ interface Order {
   updatedAt?: string
 }
 
-interface OrderItems {
+export interface OrderItems {
   order_link: string
   items: {
     product: number
