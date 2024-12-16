@@ -16,29 +16,53 @@
       <h2>Aktualisieren</h2>
       <p>ID: <input type="number" id="updateId" min="1" value="1" /></p>
       <p>Name: <input type="text" id="produktName" value="Apfel" /></p>
-      <p>Preis: <input type="number" id="produktPreis" step="0.01" value="1.99" /></p>
+      <p>Preis: <input type="number" id="produktPreis" step="0.01" min="0" value="1.99" /></p>
       <button id="btnUpdate">Produkt Aktualisieren</button>
     </div>
+    <br />
+    <div>
+      <h2>Property Aktualisieren</h2>
+      <p>ID: <input type="number" id="updatePropId" min="1" value="1" /></p>
+      <p>Preis: <input type="number" id="produktPropPreis" step="0.01" min="0" value="1.99" /></p>
+      <button id="btnUpdateProp">Preis Aktualisieren</button>
+    </div>
     <script>
-      document.getElementById('btnDelete').addEventListener('click', async () => {
+      document.getElementById('btnDelete').addEventListener('click', deleteProduct)
+      document.getElementById('btnUpdate').addEventListener('click', updateProduct)
+      document.getElementById('btnUpdateProp').addEventListener('click', updateProductProperty)
+
+      async function deleteProduct() {
         const id = document.getElementById('deleteId').value
         const res = await fetch('https://api.predic8.de/shop/v2/products/' + id, {
           method: 'DELETE'
         })
-        console.log(res)
-      })
+        console.log(res, res.json())
+      }
 
-      document.getElementById('btnUpdate').addEventListener('click', async () => {
+      async function updateProduct() {
         const id = document.getElementById('updateId').value
         const res = await fetch('https://api.predic8.de/shop/v2/products/' + id, {
           method: 'PUT',
-          body: {
+          body: JSON.stringify({
             name: document.getElementById('produktName').value,
-            preis: document.getElementById('produktPreis').value
-          }
+            price: document.getElementById('produktPreis').value
+          }),
+          headers: { 'Content-Type': 'application/json' }
         })
-        console.log(res)
-      })
+        console.log(res, res.json())
+      }
+
+      async function updateProductProperty() {
+        const id = document.getElementById('updatePropId').value
+        const res = await fetch('https://api.predic8.de/shop/v2/products/' + id, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            price: document.getElementById('produktPropPreis').value
+          }),
+          headers: { 'Content-Type': 'application/json' }
+        })
+        console.log(res, res.json())
+      }
     </script>
   </body>
 </html>
