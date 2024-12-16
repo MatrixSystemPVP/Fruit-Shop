@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <h2>Löschen</h2>
+      <p>ID: <input type="number" id="deleteId" min="1" value="1" /></p>
+      <button id="btnDelete">Produkt Löschen</button>
+    </div>
+    <br />
+    <div>
+      <h2>Aktualisieren</h2>
+      <p>ID: <input type="number" id="updateId" min="1" value="1" /></p>
+      <p>Name: <input type="text" id="produktName" value="Apfel" /></p>
+      <p>Preis: <input type="number" id="produktPreis" step="0.01" value="1.99" /></p>
+      <button id="btnUpdate">Produkt Aktualisieren</button>
+    </div>
+    <script>
+      document.getElementById('btnDelete').addEventListener('click', async () => {
+        const id = document.getElementById('deleteId').value
+        const res = await fetch('https://api.predic8.de/shop/v2/products/' + id, {
+          method: 'DELETE'
+        })
+        console.log(res)
+      })
+
+      document.getElementById('btnUpdate').addEventListener('click', async () => {
+        const id = document.getElementById('updateId').value
+        const res = await fetch('https://api.predic8.de/shop/v2/products/' + id, {
+          method: 'PUT',
+          body: {
+            name: document.getElementById('produktName').value,
+            preis: document.getElementById('produktPreis').value
+          }
+        })
+        console.log(res)
+      })
+    </script>
+  </body>
+</html>
