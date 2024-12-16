@@ -12,7 +12,14 @@ export const useApi = () => {
   const getCustomerOrders = (id: number) => get<CustomerOrders>(`customers/${id}/orders`)
   const createCustomerOrder = (id: number, body: CreateCustomerOrder) => post(`customers/${id}/orders`, body)
 
-  const getProducts = (query?: ProductsQuery) => get<Products>('products', query)
+  const getProductsSimple = (query?: ProductsQuery) => get<ProductsSimple>('products', query)
+  const getProducts = async (query?: ProductsQuery): Promise<Products> => {
+    const productList = await get<ProductsSimple>('products', query)
+    return {
+      meta: productList.meta,
+      products: await Promise.all(productList.products.map(({ id }) => get<Product>(`products/${id}`)))
+    }
+  }
   const createProduct = (body: CreateProduct) => post('products', body)
   const getProduct = (id: number) => get<Product>(`products/${id}`)
   const updateProduct = (id: number, body: UpdateProduct) => put(`products/${id}`, body)
@@ -32,6 +39,7 @@ export const useApi = () => {
     getCustomer,
     getCustomerOrders,
     createCustomerOrder,
+    getProductsSimple,
     getProducts,
     createProduct,
     getProduct,
@@ -109,13 +117,18 @@ export interface ProductsQuery {
   modified_since?: string
 }
 
-export interface Products {
+export interface ProductsSimple {
   meta: Meta
   products: {
     id: number
     name: string
     self_link: string
   }[]
+}
+
+export interface Products {
+  meta: Meta
+  products: Product[]
 }
 
 export interface CreateProduct {

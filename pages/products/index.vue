@@ -11,18 +11,25 @@
       :page-from
       :page-to
       :refresh
-    />
+      :on-new="onNewProduct"
+    >
+      <template #actions-data="{ row }: { row: Products['products'][number] }">
+        <UButton color="gray" variant="ghost" icon="i-heroicons-pencil-square" @click="() => onEditProduct(row)" />
+      </template>
+    </Table>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { TableColumn, TableRow } from '#ui/types'
+import ProductModal from '~/components/ProductModal.vue'
 
 const { getProducts } = useApi()
 
 const columns: TableColumn[] = [
   { key: 'id', label: '#' },
   { key: 'name', label: 'Name' },
+  { key: 'price', label: 'Price' },
   { key: 'actions', label: 'Actions' }
 ]
 const rows: Ref<TableRow[]> = ref([])
@@ -42,4 +49,15 @@ watch(data, (newData) => {
   rows.value = newData?.products ?? []
   pageTotal.value = newData?.meta.count ?? 0
 })
+
+const modal = useModal()
+const onEditProduct = ({ id, name, price }: Products['products'][number]) => {
+  modal.open(ProductModal, {
+    product: { id, name, price }
+  })
+}
+const onNewProduct = () => {
+  console.log('New')
+  modal.open(ProductModal)
+}
 </script>
