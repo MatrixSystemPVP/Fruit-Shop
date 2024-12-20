@@ -53,7 +53,8 @@ watch(data, (newData) => {
 const modal = useModal()
 const onEditProduct = ({ id, name, price }: Products['products'][number]) => {
   modal.open(ProductModal, {
-    product: { id, name, price }
+    product: { id, name, price },
+    refresh
   })
 }
 const onNewProduct = () => {

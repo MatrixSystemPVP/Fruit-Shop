@@ -1,5 +1,5 @@
 <template>
-  <UModal v-model="isOpen">
+  <UModal>
     <UForm :validate :state @submit="onSubmit">
       <UCard>
         <template #header>
@@ -15,7 +15,7 @@
         </UFormGroup>
 
         <template #footer>
-          <UButton type="submit">Submit</UButton>
+          <UButton type="submit" :loading>Submit</UButton>
         </template>
       </UCard>
     </UForm>
@@ -26,8 +26,9 @@
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
 const { createProduct, updateProduct } = useApi()
+const toast = useToast()
+const modal = useModal()
 
-const isOpen = defineModel<boolean>('isOpen', { default: false })
 const loading = ref(false)
 
 const props = defineProps<{
@@ -36,6 +37,7 @@ const props = defineProps<{
     name: string
     price: number
   }
+  refresh: () => Promise<void>
 }>()
 
 const state = reactive({
@@ -53,12 +55,20 @@ const validate = (validateState: typeof state): FormError[] => {
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
+  if (loading.value) return
   loading.value = true
+
   if (isNew.value) {
-    const res = await createProduct({ name: state.name!, price: state.price! })
+    const { status, data } = await useAsyncData(() => createProduct({ name: state.name!, price: state.price! }))
+    toast.add({ title: 'Product Added', timeout: 2000 })
+    console.log(status.value, data.value)
   } else {
-    const res = await updateProduct(props.product!.id, { name: state.name!, price: state.price! })
+    const { status, data } = await useAsyncData(() => updateProduct(props.product!.id, { name: state.name!, price: state.price! }))
+    toast.add({ title: 'Product Updated', timeout: 2000 })
+    console.log(status.value, data.value)
   }
-  loading.value = false
+
+  await props.refresh()
+  await modal.close()
 }
 </script>
