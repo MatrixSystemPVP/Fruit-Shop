@@ -8,16 +8,13 @@
         </div>
         <div class="flex gap-3">
           <!-- <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." /> -->
-          <UButton color="primary" icon="i-heroicons-plus" label="Neu" />
+          <UButton v-if="onNew != undefined" color="primary" icon="i-heroicons-plus" label="Neu" @click="onNew" />
         </div>
       </div>
     </template>
     <UTable :columns :rows :loading>
       <!-- https://gist.github.com/loilo/73c55ed04917ecf5d682ec70a2a1b8e2?permalink_comment_id=5211139#bonus-b-vue-3 -->
       <template v-for="(_, name) in $slots" v-slot:[name]="slotData"><slot :name="name" v-bind="slotData" /></template>
-      <template #actions-data="{ row }: { row: Products['products'][number] }">
-        <UButton color="gray" variant="ghost" icon="i-heroicons-pencil-square" />
-      </template>
     </UTable>
     <template #footer>
       <div class="flex flex-wrap items-center justify-between">
@@ -49,6 +46,7 @@ defineProps<{
   pageFrom: number
   pageTo: number
   refresh: () => void
+  onNew?: () => void
 }>()
 
 const page = defineModel<number>('page', { default: 1 })
