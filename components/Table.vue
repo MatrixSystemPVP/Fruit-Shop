@@ -8,7 +8,7 @@
         </div>
         <div class="flex gap-3">
           <!-- <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." /> -->
-          <UButton color="primary" icon="i-heroicons-plus" label="Neu" @click="onNew" />
+          <UButton v-if="onNew != undefined" color="primary" icon="i-heroicons-plus" label="Neu" @click="onNew" />
         </div>
       </div>
     </template>
@@ -46,7 +46,7 @@ defineProps<{
   pageFrom: number
   pageTo: number
   refresh: () => void
-  onNew: () => void
+  onNew?: () => void
 }>()
 
 const page = defineModel<number>('page', { default: 1 })

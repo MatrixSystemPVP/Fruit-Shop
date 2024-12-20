@@ -1,7 +1,7 @@
 export const useApi = () => {
   const { $apiBaseURL, $apiFetch } = useNuxtApp()
 
-  const get = <T, Q extends Record<string, any> = {}>(path: string, query?: Q) => $apiFetch<T>(path, { query })
+  const get = <T, Q extends Record<string, any> = {}>(path: string, query?: Q, cache?: RequestCache) => $apiFetch<T>(path, { query, cache })
   const put = <T extends Record<string, any>>(path: string, body: T) => $apiFetch(path, { method: 'PUT', body })
   const post = <T extends Record<string, any>>(path: string, body: T) => $apiFetch(path, { method: 'POST', body })
   const patch = <T extends Record<string, any>>(path: string, body: T) => $apiFetch(path, { method: 'PATCH', body })
@@ -17,7 +17,7 @@ export const useApi = () => {
     const productList = await get<ProductsSimple>('products', query)
     return {
       meta: productList.meta,
-      products: await Promise.all(productList.products.map(({ id }) => get<Product>(`products/${id}`)))
+      products: await Promise.all(productList.products.map(({ id }) => get<Product>(`products/${id}`, {}, 'no-cache')))
     }
   }
   const createProduct = (body: CreateProduct) => post('products', body)

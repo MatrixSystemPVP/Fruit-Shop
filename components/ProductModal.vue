@@ -58,17 +58,16 @@ async function onSubmit(event: FormSubmitEvent<any>) {
   if (loading.value) return
   loading.value = true
 
-  if (isNew.value) {
-    const { status, data } = await useAsyncData(() => createProduct({ name: state.name!, price: state.price! }))
-    toast.add({ title: 'Product Added', timeout: 2000 })
-    console.log(status.value, data.value)
-  } else {
-    const { status, data } = await useAsyncData(() => updateProduct(props.product!.id, { name: state.name!, price: state.price! }))
-    toast.add({ title: 'Product Updated', timeout: 2000 })
-    console.log(status.value, data.value)
+  try {
+    await (isNew.value
+      ? createProduct({ name: state.name!, price: state.price! })
+      : updateProduct(props.product!.id, { name: state.name!, price: state.price! }))
+    toast.add({ title: isNew.value ? 'Product Added' : 'Product Updated', timeout: 2000 })
+    await props.refresh()
+  } catch (error: any) {
+    toast.add({ title: error.message, timeout: 5000, color: 'red' })
   }
 
-  await props.refresh()
   await modal.close()
 }
 </script>
