@@ -1,6 +1,6 @@
 <template>
   <div class="grid gap-4 grid-cols-[repeat(auto-fit,_minmax(18rem,_1fr))]">
-    <div v-for="product of products" class="w-72 bg-white shadow-md rounded-xl duration-500 hover:shadow-xl m-auto">
+    <div v-for="product of products" class="w-72 shadow-md rounded-xl duration-500 hover:shadow-xl m-auto">
       <NuxtImg
         :src="getProductImageLink(product.id)"
         :alt="'Image of ' + product.name"
@@ -8,11 +8,11 @@
         draggable="false"
       />
       <div class="px-4 py-3 w-72">
-        <p class="text-lg font-bold text-black truncate block capitalize">{{ product.name }}</p>
+        <p class="text-lg font-bold truncate block capitalize">{{ product.name }}</p>
         <div class="flex items-center">
-          <p class="text-lg font-semibold text-black cursor-auto my-3">${{ product.price }}</p>
+          <p class="text-lg font-semibold cursor-auto my-3">${{ product.price }}</p>
           <div class="ml-auto">
-            <UButton icon="i-material-symbols-add-shopping-cart" variant="ghost" />
+            <UButton icon="i-material-symbols-add-shopping-cart" variant="ghost" @click="addItemToCart(product.id, product.name)" />
           </div>
         </div>
       </div>
@@ -25,6 +25,8 @@
 
 <script lang="ts" setup>
 const { getProducts, getProductImageLink } = useApi()
+const { addItem } = useCart()
+const toast = useToast()
 
 const page = ref(1)
 const pageCount = ref(12)
@@ -43,4 +45,9 @@ watch(data, (newData) => {
   newData?.products.forEach((product) => products.value.push(product))
   pageTotal.value = newData?.meta.count ?? 0
 })
+
+const addItemToCart = (id: number, name: string) => {
+  addItem(id)
+  toast.add({ title: name + ' added to Cart', timeout: 2000 })
+}
 </script>
