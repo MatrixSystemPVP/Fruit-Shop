@@ -1,6 +1,17 @@
 <template>
-  <div class="grid gap-4 grid-cols-[repeat(auto-fit,_minmax(18rem,_1fr))]">
-    <div v-for="product of products" class="w-72 shadow-md rounded-xl duration-500 hover:shadow-xl m-auto">
+  <div v-if="loading && pageTotal === 0" class="grid gap-4 grid-cols-[repeat(auto-fit,_minmax(18rem,_1fr))]">
+    <div v-for="i of pageCount" :key="i" class="w-72 shadow-md rounded-xl duration-500 hover:shadow-xl m-auto">
+      <USkeleton class="h-80 w-72" />
+      <div class="px-4 py-3 w-72">
+        <USkeleton class="h-5 w-2/4" />
+        <div class="flex items-center">
+          <USkeleton class="h-5 w-12 my-3" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else class="grid gap-4 grid-cols-[repeat(auto-fit,_minmax(18rem,_1fr))]">
+    <div v-for="product of products" :key="product.id" class="w-72 shadow-md rounded-xl duration-500 hover:shadow-xl m-auto">
       <NuxtImg
         :src="getProductImageLink(product.id)"
         :alt="'Image of ' + product.name"
